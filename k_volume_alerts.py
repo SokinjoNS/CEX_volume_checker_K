@@ -6,7 +6,8 @@ import pandas as pd
 from kucoin.client import Client
 import datetime
 import schedule
-from telegram_alerts import send_telegram_message  # Import the Telegram alert function
+from alert_levels_tg import get_volume_alert_details
+from telegram_alerts import send_telegram_message
 from formatting_btk import format_number, generate_chart_url
 
 now = datetime.datetime.now()
@@ -61,52 +62,25 @@ def run_script():
                 past_24_hours = df.iloc[:-2]['volume'].astype(float)
                 prev_volume_mean = past_24_hours.mean()
 
-                # here you define the percentages (%) of increase that you want to be notified on, and their different levels
-                if curr_volume > prev_volume_mean * 15:
-                    # send alert message for 1500% +
-                    message = f"*Kucoin*\n"
-                    message += f"*{symbol}* volume spike of over *1500%* in the last 1h!!!!!"
-                    message += f"\n\nCurrent volume: *{format_number(curr_volume)}*"
-                    message += f"\nVolume MA in past 24h: *{prev_volume_mean:.2f}*"
-                    message += "\n\n🚀🚀🚀🚀🚀🔴🚀🔴🚀🔴🚀🚀🚀🚀🚀"
-                    message += f"\n\n[Open Kucoin Chart]({generate_chart_url(symbol, 'KUCOIN', interval)})"
-                    send_telegram_message(message)  # Send the message using the Telegram script
-                    
-                elif curr_volume > prev_volume_mean * 10:
-                    # send alert message for 1000% +
-                    message = f"*Kucoin*\n"
-                    message += f"*{symbol}* volume spike of over *1000%* in the last 1h!!!!!"
-                    message += f"\n\nCurrent volume: *{format_number(curr_volume)}*"
-                    message += f"\nVolume MA in past 24h: *{prev_volume_mean:.2f}*"
-                    message += "\n\n🚀🚀🔴🔴🚀🚀"
-                    message += f"\n\n[Open Kucoin Chart]({generate_chart_url(symbol, 'KUCOIN', interval)})"
-                    send_telegram_message(message)  # Send the message using the Telegram script
-                    
-                elif curr_volume > prev_volume_mean * 7:
-                    # send alert message for 700%
-                    message = f"*Kucoin*\n"
-                    message += f"*{symbol}* volume spike of over *700%* in the last 1h!!!!!"
-                    message += f"\n\nCurrent volume: *{format_number(curr_volume)}*"
-                    message += f"\nVolume MA in past 24h: *{prev_volume_mean:.2f}*"
-                    message += "\n\n🔴🚨🔴"
-                    message += f"\n\n[Open Kucoin Chart]({generate_chart_url(symbol, 'KUCOIN', interval)})"
-                    send_telegram_message(message)  # Send the message using the Telegram script
-                    
-                elif curr_volume > prev_volume_mean * 5:
-                    # send alert message for 500%
-                    message = f"*Kucoin*\n"
-                    message += f"*{symbol}* volume spike of over *500%* in the last 1h!!!!!"
-                    message += f"\n\nCurrent volume: *{format_number(curr_volume)}*"
-                    message += f"\nVolume MA in past 24h: *{prev_volume_mean:.2f}*"
-                    message += "\n\n🚨🚨🚨"
-                    message += f"\n\n[Open Kucoin Chart]({generate_chart_url(symbol, 'KUCOIN', interval)})"
-                    send_telegram_message(message)  # Send the message using the Telegram script
-                    
+                alert_details_list = get_volume_alert_details(curr_volume, prev_volume_mean, symbol, '1h', 'KUCOIN')
+
+                
+            for alert_detail in alert_details_list:
+                alert_message = {
+                    'exchange': 'KUCOIN',
+                    'symbol': alert_detail['symbol'],
+                    'curr_volume': alert_detail['curr_volume'],
+                    'prev_volume_mean': alert_detail['prev_volume_mean'],
+                    'level': alert_detail['level'],
+                    'chart_url': alert_detail['chart_url']
+                }
+                send_telegram_message(alert_message)
+
         except requests.exceptions.RequestException as e:
             print(f"Error fetching data for {symbol}: {e}")
         except ValueError as e:
             print(f"Error processing data for {symbol}: {e}")
-            
+
 # Schedule and run the script
 for hour in range(24):
     schedule.every().day.at("{:02d}:06".format(hour)).do(run_script)
