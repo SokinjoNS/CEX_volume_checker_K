@@ -1,4 +1,5 @@
 # CEX_volume_checker_K
+
 Pulling data from Kucoin CEX.
 
 Install the required dependencies and libraries
