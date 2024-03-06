@@ -27,13 +27,16 @@ Before running this script, ensure you have the following:
 
 ```bash
 pip install requests pandas schedule kucoin-python
+```
 
 Create a credentials_k.json file in the script's directory with your KuCoin API credentials in the following format:
+```
 {
   "Kucoin_api_key": "your_api_key",
   "Kucoin_secret_key": "your_secret_key",
   "Kucoin_passphrase": "your_passphrase"
 }
+```
 
 Ensure you have set up a Telegram bot and have its token. Modify the telegram_alerts.py script to include your bot token and the chat ID where alerts should be sent.
 
