@@ -1,17 +1,42 @@
-# CEX_volume_checker_K
+# KuCoin Volume Alert
 
-Pulling data from Kucoin CEX.
+## Overview
 
-Install the required dependencies and libraries
+This script is designed to monitor trading volume changes on the KuCoin exchange for USDT trading pairs. It alerts users via Telegram when significant volume changes occur, compared to the 24-hour average. It integrates with the KuCoin API to fetch trading data, analyzes volume changes, and utilizes Telegram for notifications. Additionally, it provides a link to a trading view chart for the relevant cryptocurrency pair.
 
-You will need API credentials from Kucoin  for accessing the Kucoin API. 
+## Features
 
-Additionally, you will need a Telegram bot token and chat ID for sending alerts via Telegram. 
+- Monitors all USDT pairs on KuCoin that don't include leveraged tokens.
+- Calculates the average trading volume over the past 24 hours.
+- Detects significant volume changes and generates alerts.
+- Sends a detailed alert message through Telegram, including the exchange, symbol, current volume, previous average volume, alert level, and a chart URL.
+- Schedules the script to run at the beginning of every hour to ensure up-to-date monitoring.
 
-Create a credentials_k.json file in the project directory and add your Kucoin API key and secret.
+## Prerequisites
 
-Can be used with `telegram_alerts` and `formatting_btk`.
+Before running this script, ensure you have the following:
+- Python 3.x installed on your system.
+- `requests`, `pandas`, `schedule`, and `kucoin-python` packages installed.
+- A KuCoin account with an API key, secret key, and passphrase.
+- A Telegram bot for sending alerts and the corresponding bot token.
 
-Run the script!
+## Installation
 
-The script will start monitoring trading pairs on Kucoin. It will retrieve historical volume data and calculate the mean volume over the past 24 hours.
+1. Clone the repository or download the script to your local machine.
+2. Install the required Python packages using pip:
+
+```bash
+pip install requests pandas schedule kucoin-python
+
+Create a credentials_k.json file in the script's directory with your KuCoin API credentials in the following format:
+{
+  "Kucoin_api_key": "your_api_key",
+  "Kucoin_secret_key": "your_secret_key",
+  "Kucoin_passphrase": "your_passphrase"
+}
+
+Ensure you have set up a Telegram bot and have its token. Modify the telegram_alerts.py script to include your bot token and the chat ID where alerts should be sent.
+
+## Customization
+
+You can customize the alert criteria by modifying the get_volume_alert_details function in the alert_levels_tg.py file. This allows you to set different thresholds for volume changes that trigger alerts.
