@@ -43,3 +43,18 @@ Ensure you have set up a Telegram bot and have its token. Modify the telegram_al
 ## Customization
 
 You can customize the alert criteria by modifying the get_volume_alert_details function in the alert_levels_tg.py file. This allows you to set different thresholds for volume changes that trigger alerts.
+
+## Contributing
+
+Contributions are welcome! If you have ideas for new features, improvements, or bug fixes, feel free to fork the repository, make your changes, and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+
+## Support
+
+For issues, questions, or contributions, please open an issue in the GitHub repository.
+
+Feedback and contributions are welcome!
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+This project and the direct_address_tg_listener.py module are licensed under the MIT License. For more details, see the LICENSE file.
